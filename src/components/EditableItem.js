@@ -1,18 +1,24 @@
 import React, { Component } from 'react'
 import EditingItem from './EditingItem';
-import cancelButton from '../image/error.png'
+import cancelButton from '../image/error.png';
+import editIcon from '../image/edit.png';
+import checkedIcon from '../image/checked.png';
+import uncheckedIcon from '../image/unchecked.png';
+import trashIcon from '../image/trash.png';
 
 export default class ListItem extends Component {
   state = {
     product: this.props.product,
     price: this.props.price,
     quantity: this.props.quantity,
-    id: this.props.id
+    id: this.props.id,
+    editing : false,
+    checked: false
   }
   onEditClick = (e) => {
-    this.setState({
-      editing: !this.state.editing
-    })
+    this.setState(prevState => ({
+      editing: !prevState.editing
+    }))
   }
   onEditClickTrue = (e) => {
     this.setState({
@@ -34,38 +40,76 @@ export default class ListItem extends Component {
       quantity: e.target.value
     })
   }
+  onToggleChecked = (e) => {
+    this.setState(prevState => ({
+      checked: !prevState.checked
+    }))
+  }
   handleEditSubmit = (e) => {
     this.props.onEditSubmit(this.state)
   }
+  handleDeleteClick = (e) => {
+    this.props.onDeleteClick(this.state);
+  }
+  componentDidUpdate = (prevProps, prevState) => {
+    const {product, price, quantity} = this.state;
+    if (this.props.product !== product || this.props.price !== price || this.props.quantity !== quantity) {
+      this.setState({
+        product: this.props.product,
+        price: this.props.price,
+        quantity: this.props.quantity,
+      })
+    }
+  }
+  
   render() {
+    const { product, price, quantity, id, checked } = this.state;
     return (
       <div className="listItem">
-          { this.state.editing ?
-          <EditingItem
-            product={this.props.product}
-            quantity={this.props.quantity}
-            id={this.props.id}
-            price={this.props.price}
-            onEditClick={this.onEditClick}
-            onInputSubmit={this.props.onInputSubmit}
-            onInputChange={this.props.onInputChange}
-            onPriceInputChange={this.props.onPriceInputChange}
-            onQuantityInputChange={this.props.onQuantityInputChange}
-            onEditSubmit={this.props.onEditSubmit}
-          />
-          :
-          <div className="relative">
-            <button className="testing" onClick={() => this.props.onDeleteClick(this.props)}>
-            <img src={cancelButton}></img>
-            </button>
-            <div tabIndex="0" onBlur={this.handleEditSubmit}>
-              <input className="name" onBlur={this.handleEditSubmit} onChange={this.onProductChange} value={this.state.product}></input>
-              <input className="small-text" onChange={this.onQuantityChange} value={this.state.quantity}></input>
-              <input className="small-text" onChange={this.onPriceChange} value={this.state.price}></input>
-              <p className="medium-text">{this.state.quantity * this.state.price}</p>
-            </div>
-          </div>
-          }   
+            {this.state.editing ?
+              <EditingItem 
+                product={product}
+                price={price}
+                quantity={quantity}
+                id={id}
+                onEditClick={this.onEditClick}
+                onEditSubmit={this.props.onEditSubmit}
+              />
+              :
+              <div className="listItem--editable">
+                <p>{this.props.product}</p>
+                <div>
+                  {checked ? 
+                    <img 
+                    onClick={this.onToggleChecked} 
+                    className="icon" 
+                    alt="Checked"
+                    src={checkedIcon}>
+                    </img>
+                  :
+                    <img 
+                    onClick={this.onToggleChecked}
+                    className="icon"
+                    alt="Unchecked" 
+                    src={uncheckedIcon}>
+                    </img>
+                  }
+                  <img 
+                  onClick={this.onEditClick}
+                  className="icon"
+                  src={editIcon}
+                  >
+                  </img>
+                  <img 
+                  onClick={this.handleDeleteClick}
+                  className="icon"
+                  src={trashIcon}
+                  >
+                  </img>
+                </div>
+              </div>
+            }
+            {!this.state.editing && <p className="notes">NOTES!</p>}
       </div>
     )
   }
