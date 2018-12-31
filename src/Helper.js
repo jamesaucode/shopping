@@ -7,4 +7,10 @@ const getTotal = list => {
   return totalPrice;
 };
 
-export { getTotal };
+const renameObjectKey = (obj, oldKey, newKey) => {
+  Object.defineProperty(obj, newKey,
+    Object.getOwnPropertyDescriptor(obj, oldKey));
+  delete obj[oldKey]
+}
+
+export { getTotal, renameObjectKey };

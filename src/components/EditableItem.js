@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import EditingItem from "./EditingItem";
 // import editIcon from '../image/edit.png';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Item from "./Item";
 
 export default class ListItem extends Component {

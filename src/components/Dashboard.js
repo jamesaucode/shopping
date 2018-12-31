@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import EditableItem from "./EditableItem";
+import NewListNameInput from './NewListNameInput';
 import addButton from "../image/plus.png";
 // import { getTotal } from "../Helper";
+import editIcon from '../image/edit.png';
 import Select from "./Select";
 import uuid from "uuid";
 
@@ -51,6 +53,7 @@ export default class Dashboard extends Component {
     search: "",
     sortBy: "",
     creatingNewList: false,
+    editingListName: false,
     newListName: "",
     total: 0,
     quantity: 0,
@@ -142,6 +145,12 @@ export default class Dashboard extends Component {
       });
     }
   };
+
+  onEditListNameClick = e => {
+    this.setState(prevState => ({
+      editingListName: !prevState.editingListName
+    }))
+  }
   onToggleClick = () => {
     this.setState({
       toggle: !this.state.toggle
@@ -177,6 +186,20 @@ export default class Dashboard extends Component {
       creatingNewList: false
     })
   };
+  onCurrentListSubmit = newName => {
+    var lists = this.state.lists;
+    var oldName = this.state.currentList;
+    if (oldName !== newName) {
+      Object.defineProperty(lists, newName,
+        Object.getOwnPropertyDescriptor(lists, oldName));
+      delete lists[oldName]
+    }
+    this.setState({
+      lists,
+      currentList: newName
+    })
+    console.log(this.state.lists)
+  }
   onNewListChange = e => {
     this.setState({
       newListName: e.target.value
@@ -194,12 +217,16 @@ export default class Dashboard extends Component {
   };
 
   componentDidMount = () => {
-    const cache = localStorage.getItem("list");
-    const lists = JSON.parse(cache)
-    console.log(cache)
-    if (cache) {
+    const cachedList = localStorage.getItem("list");
+    const cachedCurrentList = localStorage.getItem("currentList");
+    const lists = JSON.parse(cachedList)
+    const currentList = JSON.parse(cachedCurrentList);
+    console.log(cachedList)
+    console.log(cachedCurrentList)
+    if (cachedList) {
       this.setState({
-        lists
+        lists,
+        currentList
       })
     }
     // getTotal(this.state.lists[this.state.currentList]);
@@ -212,6 +239,7 @@ export default class Dashboard extends Component {
     //   });
     // }
     localStorage.setItem("list", JSON.stringify(this.state.lists))
+    localStorage.setItem("currentList", JSON.stringify(this.state.currentList))
   };
   render() {
     const searchTerm = this.state.search;
@@ -279,26 +307,46 @@ export default class Dashboard extends Component {
           value={this.state.search}
           onChange={this.onSearchChange}
         />
+
+        {/* The toggle button, if the state is toggled, then the button will 
+        be up arrow, vice versa. */}
         {this.state.toggle ? (
           <button className="total-price" onClick={this.onToggleClick}>
             ↓
           </button>
         ) : (
-          <button className="total-price" onClick={this.onToggleClick}>
-            ↑
+            <button className="total-price" onClick={this.onToggleClick}>
+              ↑
           </button>
           )}
-        <select
-          className="select--list"
-          value={this.state.currentList}
-          onChange={this.onChangeSelect}
-        >
-          {Object.keys(this.state.lists).map(key => (
-            <Select value={key} key={uuid()} />
-          ))}
-          <option value="Add">-----Add another list-----</option>
-        </select>
 
+        {/* All the list names */}
+        <div>
+          {this.state.editingListName ?
+            <NewListNameInput
+              currentList={this.state.currentList}
+              onCurrentListSubmit={this.onCurrentListSubmit}
+              onEditListNameClick={this.onEditListNameClick}
+            />
+            :
+            <select
+              className="select--list"
+              value={this.state.currentList}
+              onChange={this.onChangeSelect}
+            >
+              {Object.keys(this.state.lists).map(key => (
+                <Select value={key} key={uuid()} />
+              ))}
+              <option value="Add">-----Add another list-----</option>
+            </select>
+          }
+          <img
+            alt="Edit icon"
+            onClick={this.onEditListNameClick}
+            value={this.state.currentList}
+            src={editIcon}>
+          </img>
+        </div>
         {!this.state.toggle && (
           <div className="itemlist">
             <button className="btn--add" onClick={() => this.onItemToggleClick()}>
@@ -323,7 +371,6 @@ export default class Dashboard extends Component {
             ))}
           </div>
         )}
-        <input type="hidden" autoFocus={true} />
       </div>
     );
   }
