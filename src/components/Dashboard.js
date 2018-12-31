@@ -66,7 +66,7 @@ export default class Dashboard extends Component {
     var target = e.target.value;
     if (target === "Add") {
       console.log("Adding another list");
-      this.onAddListSelect();
+      // this.onAddListSelect();
       this.setState({
         creatingNewList: true
       });
@@ -75,23 +75,6 @@ export default class Dashboard extends Component {
         currentList: target
       });
     }
-  };
-  onAddListSelect = () => {
-    // var key = "Newlist";
-    // var updatedList = this.state.lists;
-    // updatedList[key] = [
-    //   {
-    //     product: "lul",
-    //     price: 10,
-    //     quantity: 1,
-    //     id: uuid()
-    //   }
-    // ];
-    // // console.log(newObj)
-    // this.setState({
-    //   lists: updatedList
-    // });
-    // console.log(this.state.lists);
   };
   onPriceInputChange = e => {
     var input = e.target.value;
@@ -110,24 +93,6 @@ export default class Dashboard extends Component {
     this.setState({
       quantity: parseFloat(e.target.value)
     });
-  // onInputSubmit = items => {
-  //   var list = items;
-  //   var input = this.state.input;
-  //   var priceInput = parseFloat(this.state.priceInput);
-  //   var quantity = this.state.quantity;
-  //   list.push({
-  //     product: input,
-  //     price: priceInput,
-  //     quantity: quantity,
-  //     id: uuid()
-  //   });
-  //   this.setState({
-  //     list: list,
-  //     input: "",
-  //     priceInput: ""
-  //   });
-  //   this.plusTotal(priceInput * quantity);
-  // };
   onDeleteClick = item => {
     var updatedList = this.state.lists;
     var currentList = updatedList[this.state.currentList];
@@ -190,13 +155,18 @@ export default class Dashboard extends Component {
   };
   onNewListSubmit = e => {
     e.preventDefault();
-    var lists = this.state.lists;
-    lists[this.state.newListName] = [];
+    if (this.state.newListName.trim().length > 0) {
+      var lists = this.state.lists;
+      lists[this.state.newListName] = [];
+      this.setState({
+        lists,
+        newListName: "",
+        creatingNewList: false
+      });
+    }
     this.setState({
-      lists,
-      newListName: "",
       creatingNewList: false
-    });
+    })
   };
   onNewListChange = e => {
     this.setState({
@@ -280,16 +250,6 @@ export default class Dashboard extends Component {
           <nav className="nav-bar">
             <h1 className="heading">Easy Shopping List</h1>
             <select
-              className="select--list"
-              value={this.state.currentList}
-              onChange={this.onChangeSelect}
-            >
-              {Object.keys(this.state.lists).map(key => (
-                <Select value={key} key={uuid()} />
-              ))}
-              <option value="Add">-----Add another list-----</option>
-            </select>
-            <select
               className="select--sortBy"
               value={this.state.sortBy}
               onChange={this.onSortByChange}
@@ -310,9 +270,6 @@ export default class Dashboard extends Component {
             />
           </form>
         )}
-        {/* <form>
-          <input className="input--main" type="text" placeholder="Add list" />
-        </form> */}
         <input
           className="search"
           placeholder="Search"
@@ -324,10 +281,20 @@ export default class Dashboard extends Component {
             ↓
           </button>
         ) : (
-          <button className="total-price" onClick={this.onToggleClick}>
-            ↑
+            <button className="total-price" onClick={this.onToggleClick}>
+              ↑
           </button>
-        )}
+          )}
+        <select
+          className="select--list"
+          value={this.state.currentList}
+          onChange={this.onChangeSelect}
+        >
+          {Object.keys(this.state.lists).map(key => (
+            <Select value={key} key={uuid()} />
+          ))}
+          <option value="Add">-----Add another list-----</option>
+        </select>
 
         {!this.state.toggle && (
           <div className="itemlist">
