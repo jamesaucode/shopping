@@ -1,19 +1,4 @@
-* {
-  margin: 0;
-  border: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgb(247, 247, 247);
-}
+@import 'utilities';
 
 .search {
   background-color: white;
@@ -27,10 +12,10 @@ body {
   background-color: rgb(167, 35, 201);
   padding: 0.5em;
   color: white;
-}
 
-.btn--long:first-of-type {
-  border-bottom: 1px solid black;
+  &:first-of-type {
+    border-bottom: 1px solid black;
+  }
 }
 
 .btn--add {
@@ -144,31 +129,29 @@ body {
   background-color: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   transition: all 0.5s ease-out;
-}
 
-.listItem:hover {
-  cursor: pointer;
-  background-color: rgba(119, 221, 119, 0.5);
-}
-
-.listItem--editing {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0.5em 0.25em;
-  font-size: 1.25em;
-  background-color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  transition: all 0.5s ease-out;
-}
-
-.listItem--editable {
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 0.5em;
+  &:hover {
+     cursor: pointer;
+    background-color: rgba(119, 221, 119, 0.5);
+  }
+  &--editing {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0.5em 0.25em;
+    font-size: 1.25em;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    transition: all 0.5s ease-out;
+  }
+  &--editable {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5em;
+  }
 }
 
 .icon {
@@ -206,9 +189,10 @@ body {
 }
 
 .small-text {
+  width: 80%;
   font-size: 1em;
   margin: 0.25em 0;
-  text-align: center;
+  text-align: left;
 }
 
 .wrap--editing-item {
@@ -235,7 +219,7 @@ body {
 
 .label {
   font-size: 0.75em;
-  width: 0;
+  width: 20%;
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -248,7 +232,7 @@ body {
 .heading {
   font-size: 2em;
   text-align: center;
-  font-weight: 700;
+  font-weight: 500;
   justify-self: flex-start;
 }
 
@@ -259,9 +243,4 @@ body {
   padding: 0.5em;
   color: white;
   text-align: center;
-}
-
-input {
-  min-width: 300px;
-  background-color: inherit;
 }

@@ -40,6 +40,8 @@ export default class Dashboard extends Component {
     currentList: "Trip to TJ",
     search: "",
     sortBy: "",
+    creatingNewList: false,
+    newListName: "",
     // input: "",
     // priceInput: "",
     total: 0,
@@ -65,6 +67,9 @@ export default class Dashboard extends Component {
     if (target === "Add") {
       console.log("Adding another list");
       this.onAddListSelect();
+      this.setState({
+        creatingNewList: true
+      });
     } else {
       this.setState({
         currentList: target
@@ -72,21 +77,21 @@ export default class Dashboard extends Component {
     }
   };
   onAddListSelect = () => {
-    var key = "Newlist";
-    var updatedList = this.state.lists;
-    updatedList[key] = [
-      {
-        product: "lul",
-        price: 10,
-        quantity: 1,
-        id: uuid()
-      }
-    ];
-    // console.log(newObj)
-    this.setState({
-      lists: updatedList
-    });
-    console.log(this.state.lists);
+    // var key = "Newlist";
+    // var updatedList = this.state.lists;
+    // updatedList[key] = [
+    //   {
+    //     product: "lul",
+    //     price: 10,
+    //     quantity: 1,
+    //     id: uuid()
+    //   }
+    // ];
+    // // console.log(newObj)
+    // this.setState({
+    //   lists: updatedList
+    // });
+    // console.log(this.state.lists);
   };
   onPriceInputChange = e => {
     var input = e.target.value;
@@ -105,24 +110,24 @@ export default class Dashboard extends Component {
     this.setState({
       quantity: parseFloat(e.target.value)
     });
-  onInputSubmit = items => {
-    var list = items;
-    var input = this.state.input;
-    var priceInput = parseFloat(this.state.priceInput);
-    var quantity = this.state.quantity;
-    list.push({
-      product: input,
-      price: priceInput,
-      quantity: quantity,
-      id: uuid()
-    });
-    this.setState({
-      list: list,
-      input: "",
-      priceInput: ""
-    });
-    this.plusTotal(priceInput * quantity);
-  };
+  // onInputSubmit = items => {
+  //   var list = items;
+  //   var input = this.state.input;
+  //   var priceInput = parseFloat(this.state.priceInput);
+  //   var quantity = this.state.quantity;
+  //   list.push({
+  //     product: input,
+  //     price: priceInput,
+  //     quantity: quantity,
+  //     id: uuid()
+  //   });
+  //   this.setState({
+  //     list: list,
+  //     input: "",
+  //     priceInput: ""
+  //   });
+  //   this.plusTotal(priceInput * quantity);
+  // };
   onDeleteClick = item => {
     var updatedList = this.state.lists;
     var currentList = updatedList[this.state.currentList];
@@ -181,6 +186,21 @@ export default class Dashboard extends Component {
     });
     this.setState({
       lists: updatedList
+    });
+  };
+  onNewListSubmit = e => {
+    e.preventDefault();
+    var lists = this.state.lists;
+    lists[this.state.newListName] = [];
+    this.setState({
+      lists,
+      newListName: "",
+      creatingNewList: false
+    });
+  };
+  onNewListChange = e => {
+    this.setState({
+      newListName: e.target.value
     });
   };
   onSearchChange = e => {
@@ -279,6 +299,17 @@ export default class Dashboard extends Component {
             </select>
           </nav>
         </div>
+        {this.state.creatingNewList && (
+          <form onSubmit={this.onNewListSubmit}>
+            <input
+              className="search"
+              placeholde="New list name"
+              value={this.state.newListName}
+              onChange={this.onNewListChange}
+              autoFocus
+            />
+          </form>
+        )}
         {/* <form>
           <input className="input--main" type="text" placeholder="Add list" />
         </form> */}
