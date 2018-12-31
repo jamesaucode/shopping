@@ -48,8 +48,6 @@ export default class EditingItem extends Component {
             onChange={this.onPriceInputChange}
             value={this.state.price} 
             />
-            <button className="btn--long" onClick={this.onSubmit}>Submit</button>
-            <button className="btn--long" onClick={(e) => this.props.onEditClick()}>Cancel</button>
       </div>
     )
   }
