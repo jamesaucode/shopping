@@ -113,7 +113,7 @@
 .select--sortBy {
   width: 200px;
   padding: 1em;
-  margin-left: auto;
+  // margin-left: 2em;
   /* for Firefox */
   -moz-appearance: none;
   /* for Chrome */
@@ -255,6 +255,12 @@
   font-size: 0.75em;
   width: 0;
   color: rgba(0, 0, 0, 0.5);
+
+  &-with-width {
+    font-size: 0.75em;
+    width: initial;
+    color: rgba(0, 0, 0, 0.5);
+  }
 }
 
 .notes {

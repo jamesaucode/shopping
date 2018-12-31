@@ -249,7 +249,11 @@ export default class Dashboard extends Component {
         <div className="wrapper--nav-bar">
           <nav className="nav-bar">
             <h1 className="heading">Easy Shopping List</h1>
+            <label className="label-with-width margin-left-auto" htmlFor="sort">
+            Sort By:
+            </label>
             <select
+              name="sort"
               className="select--sortBy"
               value={this.state.sortBy}
               onChange={this.onSortByChange}
