@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import EditingItem from "./EditingItem";
 // import editIcon from '../image/edit.png';
-import checkedIcon from "../image/checked.png";
-import uncheckedIcon from "../image/unchecked.png";
-import trashIcon from "../image/trash.png";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Item from "./Item";
 
 export default class ListItem extends Component {
   state = {
@@ -11,6 +10,7 @@ export default class ListItem extends Component {
     price: this.props.price,
     quantity: this.props.quantity,
     id: this.props.id,
+    note: this.props.note,
     editing: this.props.editing,
     checked: false
   };
@@ -52,22 +52,24 @@ export default class ListItem extends Component {
     this.props.onDeleteClick(this.state);
   };
   componentDidUpdate = (prevProps, prevState) => {
-    const { product, price, quantity } = this.state;
+    const { product, price, quantity, note } = this.state;
     if (
       this.props.product !== product ||
       this.props.price !== price ||
-      this.props.quantity !== quantity
+      this.props.quantity !== quantity ||
+      this.props.note !== note
     ) {
       this.setState({
         product: this.props.product,
         price: this.props.price,
-        quantity: this.props.quantity
+        quantity: this.props.quantity,
+        note: this.props.note
       });
     }
   };
 
   render() {
-    const { product, price, quantity, id, checked } = this.state;
+    const { product, price, quantity, note, id, checked } = this.state;
     if (this.state.editing) {
       return (
         <EditingItem
@@ -75,102 +77,23 @@ export default class ListItem extends Component {
           price={price}
           quantity={quantity}
           id={id}
+          note={note}
           onEditClick={this.onEditClick}
           onEditSubmit={this.props.onEditSubmit}
         />
       );
     } else {
       return (
-        <div onClick={this.onEditClick} className="listItem">
-          <div className="listItem--editable">
-            <p>{this.props.product}</p>
-            <div>
-              {checked ? (
-                <img
-                  onClick={this.onToggleChecked}
-                  className="icon"
-                  alt="Checked"
-                  src={checkedIcon}
-                />
-              ) : (
-                <img
-                  onClick={this.onToggleChecked}
-                  className="icon"
-                  alt="Unchecked"
-                  src={uncheckedIcon}
-                />
-              )}
-              {/* <img
-                  alt="Edit icon"
-                  onClick={this.onEditClick}
-                  className="icon"
-                  src={editIcon}
-                  >
-                  </img> */}
-              <img
-                alt="Trash icon"
-                onClick={this.handleDeleteClick}
-                className="icon"
-                src={trashIcon}
-              />
-            </div>
-          </div>
-          <p className="notes">Quantity: {quantity}</p>
-        </div>
+        <Item
+          product={product}
+          quantity={quantity}
+          checked={checked}
+          note={note}
+          onEditClick={this.onEditClick}
+          handleDeleteClick={this.handleDeleteClick}
+          onToggleChecked={this.onToggleChecked}
+        />
       );
     }
-
-    // return (
-    //   <div className="listItem">
-    //         {this.state.editing ?
-    //           <EditingItem
-    //             product={product}
-    //             price={price}
-    //             quantity={quantity}
-    //             id={id}
-    //             onEditClick={this.onEditClick}
-    //             onEditSubmit={this.props.onEditSubmit}
-    //           />
-    //           :
-    //           <div onClick={this.onEditClick} className="listItem--editable">
-    //             <p>{this.props.product}</p>
-    //             <div>
-    //               {checked ?
-    //                 <img
-    //                 onClick={this.onToggleChecked}
-    //                 className="icon"
-    //                 alt="Checked"
-    //                 src={checkedIcon}>
-    //                 </img>
-    //               :
-    //                 <img
-    //                 onClick={this.onToggleChecked}
-    //                 className="icon"
-    //                 alt="Unchecked"
-    //                 src={uncheckedIcon}>
-    //                 </img>
-    //               }
-    //               {/* <img
-    //               alt="Edit icon"
-    //               onClick={this.onEditClick}
-    //               className="icon"
-    //               src={editIcon}
-    //               >
-    //               </img> */}
-    //               <img
-    //               alt="Trash icon"
-    //               onClick={this.handleDeleteClick}
-    //               className="icon"
-    //               src={trashIcon}
-    //               >
-    //               </img>
-    //             </div>
-    //           </div>
-    //         }
-    //         {!this.state.editing &&
-    //         <p className="notes">Quantity: {quantity}</p>
-    //         }
-    //   </div>
-    // )
   }
 }

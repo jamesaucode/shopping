@@ -1,49 +1,57 @@
 import React, { Component } from "react";
 import EditableItem from "./EditableItem";
 import addButton from "../image/plus.png";
-import { getTotal } from "../Helper";
+// import { getTotal } from "../Helper";
 import Select from "./Select";
 import uuid from "uuid";
 
 export default class Dashboard extends Component {
   state = {
     lists: {
-      "Trip to TJ": [
+      // "Trip to TJ": [
+      //   {
+      //     product: "Pizza",
+      //     price: 5,
+      //     quantity: 1,
+      //     note: "",
+      //     editing: false,
+      //     id: uuid()
+      //   },
+      //   {
+      //     product: "Soy Milk",
+      //     price: 3,
+      //     quantity: 2,
+      //     note: "",
+      //     editing: false,
+      //     id: uuid()
+      //   }
+      // ],
+      // "Trip to Costco": [
+      //   {
+      //     product: "Starbucks Coffee",
+      //     price: 25,
+      //     quantity: 1,
+      //     note: "",
+      //     editing: false,
+      //     id: uuid()
+      //   }
+      // ]
+      "New list 1": [
         {
-          product: "Pizza",
-          price: 5,
-          quantity: 1,
-          note: "",
-          editing: false,
-          id: uuid()
-        },
-        {
-          product: "Soy Milk",
-          price: 3,
+          product: "New product",
+          price: 10,
           quantity: 2,
-          note: "",
-          editing: false,
-          id: uuid()
-        }
-      ],
-      "Trip to Costco": [
-        {
-          product: "Starbucks Coffee",
-          price: 25,
-          quantity: 1,
           note: "",
           editing: false,
           id: uuid()
         }
       ]
     },
-    currentList: "Trip to TJ",
+    currentList: "New list 1",
     search: "",
     sortBy: "",
     creatingNewList: false,
     newListName: "",
-    // input: "",
-    // priceInput: "",
     total: 0,
     quantity: 0,
     toggle: false
@@ -66,7 +74,6 @@ export default class Dashboard extends Component {
     var target = e.target.value;
     if (target === "Add") {
       console.log("Adding another list");
-      // this.onAddListSelect();
       this.setState({
         creatingNewList: true
       });
@@ -110,7 +117,7 @@ export default class Dashboard extends Component {
     // const list = [...this.state.list];
     // localStorage.setItem("list", JSON.stringify(list));
   };
-  onEditSubmit = ({ product, price, quantity, id }) => {
+  onEditSubmit = ({ product, price, quantity, id, note }) => {
     var updatedList = this.state.lists;
     var currentList = updatedList[this.state.currentList];
     if (product.length > 0) {
@@ -120,7 +127,8 @@ export default class Dashboard extends Component {
             product,
             price,
             quantity,
-            id
+            id,
+            note
           };
         } else {
           return item;
@@ -142,11 +150,12 @@ export default class Dashboard extends Component {
   onItemToggleClick = () => {
     var updatedList = this.state.lists;
     var newList = updatedList[this.state.currentList];
-    newList.push({
+    newList.unshift({
       product: "",
       price: 10,
       quantity: 1,
       id: uuid(),
+      note: '',
       editing: true
     });
     this.setState({
@@ -185,35 +194,25 @@ export default class Dashboard extends Component {
   };
 
   componentDidMount = () => {
-    // const cache = localStorage.getItem("list");
-    // try {
-    //   var list = JSON.parse(cache);
-    //   this.setState({
-    //     list
-    //   });
-    // } catch (e) {
-    //   console.log("Empty list! Reseting the list");
-    //   this.setState({
-    //     list: [
-    //       {
-    //         product: "New item",
-    //         price: 10,
-    //         quantity: 1,
-    //         id: uuid()
-    //       }
-    //     ]
-    //   });
-    getTotal(this.state.lists[this.state.currentList]);
+    const cache = localStorage.getItem("list");
+    const lists = JSON.parse(cache)
+    console.log(cache)
+    if (cache) {
+      this.setState({
+        lists
+      })
+    }
+    // getTotal(this.state.lists[this.state.currentList]);
   };
   componentDidUpdate = (prevProps, prevState) => {
-    var newTotal = getTotal(this.state.lists[this.state.currentList]);
-    if (this.state.total !== newTotal) {
-      this.setState({
-        total: newTotal
-      });
-    }
+    // var newTotal = getTotal(this.state.lists[this.state.currentList]);
+    // if (this.state.total !== newTotal) {
+    //   this.setState({
+    //     total: newTotal
+    //   });
+    // }
+    localStorage.setItem("list", JSON.stringify(this.state.lists))
   };
-
   render() {
     const searchTerm = this.state.search;
     const showList = this.state.lists[this.state.currentList].filter(item => {
@@ -226,22 +225,21 @@ export default class Dashboard extends Component {
     if (this.state.sortBy === "Alphabetical") {
       showList.sort((a, b) => {
         if (a.product.toLowerCase() < b.product.toLowerCase()) {
-          return -1;
+          return 1;
         }
         if (a.product.toLowerCase() > b.product.toLowerCase()) {
-          return 1;
+          return -1;
         }
         return 0;
       });
     }
     if (this.state.sortBy === "Alphabetical") {
       showList.sort(a => {
-        if (a.product == "") {
-          return 1;
-        } else {
+        if (a.product === "") {
           return -1;
+        } else {
+          return 1;
         }
-        return 0;
       });
     }
     return (
@@ -250,7 +248,7 @@ export default class Dashboard extends Component {
           <nav className="nav-bar">
             <h1 className="heading">Easy Shopping List</h1>
             <label className="label-with-width margin-left-auto" htmlFor="sort">
-            Sort By:
+              Sort By:
             </label>
             <select
               name="sort"
@@ -267,7 +265,8 @@ export default class Dashboard extends Component {
           <form onSubmit={this.onNewListSubmit}>
             <input
               className="search"
-              placeholde="New list name"
+              placeholder="New list name"
+              onBlur={() => this.setState({ creatingNewList: false })}
               value={this.state.newListName}
               onChange={this.onNewListChange}
               autoFocus
@@ -285,8 +284,8 @@ export default class Dashboard extends Component {
             ↓
           </button>
         ) : (
-            <button className="total-price" onClick={this.onToggleClick}>
-              ↑
+          <button className="total-price" onClick={this.onToggleClick}>
+            ↑
           </button>
           )}
         <select
@@ -302,7 +301,10 @@ export default class Dashboard extends Component {
 
         {!this.state.toggle && (
           <div className="itemlist">
-            {showList.map(({ product, price, quantity, id, editing }) => (
+            <button className="btn--add" onClick={() => this.onItemToggleClick()}>
+              <img alt="Add button" src={addButton} />
+            </button>
+            {showList.map(({ product, price, quantity, id, editing, note }) => (
               <EditableItem
                 editing={editing}
                 product={product}
@@ -310,6 +312,7 @@ export default class Dashboard extends Component {
                 quantity={quantity}
                 id={id}
                 key={id}
+                note={note}
                 onDeleteClick={this.onDeleteClick}
                 onInputSubmit={this.onInputSubmit}
                 onInputChange={this.onInputChange}
@@ -320,9 +323,6 @@ export default class Dashboard extends Component {
             ))}
           </div>
         )}
-        <button className="btn--add" onClick={() => this.onItemToggleClick()}>
-          <img alt="Add button" src={addButton} />
-        </button>
         <input type="hidden" autoFocus={true} />
       </div>
     );

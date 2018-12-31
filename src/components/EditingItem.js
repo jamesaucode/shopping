@@ -8,11 +8,17 @@ export default class EditingItem extends Component {
     price: this.props.price,
     quantity: this.props.quantity,
     id: this.props.id,
+    note: this.props.note,
     focused: true
   }
   onInputChange = (e) => {
     this.setState({
       product: e.target.value
+    })
+  }
+  onNoteChange = (e) => {
+    this.setState({
+      note: e.target.value
     })
   }
   onPriceInputChange = (e) => {
@@ -31,78 +37,60 @@ export default class EditingItem extends Component {
     }))
   }
   onQuantityDecrementClick = (e) => {
-    {
-      if (this.state.quantity - 1 > 0) {
-        this.setState(prevState => (
-          {
-            quantity: prevState.quantity - 1
-          }))
-      }
+    if (this.state.quantity - 1 > 0) {
+      this.setState(prevState => (
+        {
+          quantity: prevState.quantity - 1
+        }))
     }
   }
   onSubmit = () => {
     this.props.onEditSubmit(this.state);
     this.props.onEditClick();
   }
-  onFocus = () => {
-    this.setState({
-      focused: true
-    })
-  }
-  onBlur = (e) => {
-    this.setState({
-      focused: false
-    })
-  }
 
   componentDidUpdate = (prevProps, prevState) => {
   }
 
   render() {
+    const { product, quantity, note } = this.state;
     return (
-      <div
-        className="listItem--editing">
-        <form
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
-          onSubmit={this.onSubmit}>
-          <div className="wrap--editing-item">
-            <input
-              type="text"
-              name="product"
-              className="input--name-edit"
-              placeholder="Product name"
-              onChange={this.onInputChange}
-              value={this.state.product}
-              autoFocus
-            />
-          </div>
-          <div className="wrap--editing-item">
-            <label
-              className="label"
-              htmlFor="quantity">
-              Quantity:
-          </label>
-            <img src={minus} onClick={this.onQuantityDecrementClick}></img>
-            <p>{this.state.quantity}</p>
-            <img src={add} onClick={this.onQuantityIncrementClick}></img>
-          </div>
-          {/* <div className="wrap--editing-item">
-          <label 
-            className="label" 
-            htmlFor="price">
-            Price: 
-          </label>
-          <input 
-            className="input--quantity"
-            name="price"
-            type="text"
-            onChange={this.onPriceInputChange}
-            value={this.state.price} 
-          />
-        </div> */}
-        </form>
-        <div onClick={this.onSubmit} className="whole-screen">
+      <div className="modal">
+        <div
+          className="listItem--editing">
+          <form
+            onSubmit={this.onSubmit}>
+            <div className="wrap--editing-item">
+              <input
+                type="text"
+                name="product"
+                className="input--name-edit"
+                placeholder="Product name"
+                onChange={this.onInputChange}
+                value={product}
+                autoFocus
+              />
+            </div>
+            <div className="wrap--editing-item">
+              <label
+                className="label"
+                htmlFor="quantity">
+                Quantity:
+              </label>
+              <img src={minus} alt="decrement click" onClick={this.onQuantityDecrementClick}></img>
+              <p>{quantity}</p>
+              <img src={add} alt="increment click" onClick={this.onQuantityIncrementClick}></img>
+            </div>
+            <div className="wrap--editing-item">
+              <label
+                className="label"
+                htmlFor="note">
+                Notes:
+              </label>
+              <textarea onChange={this.onNoteChange} value={note} className="textarea--note" name="note"></textarea>
+            </div>
+          </form>
+          <div onClick={this.onSubmit} className="whole-screen"></div>
         </div>
       </div>
     )
