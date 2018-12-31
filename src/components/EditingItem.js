@@ -5,8 +5,7 @@ export default class EditingItem extends Component {
     product: this.props.product,
     price: this.props.price,
     quantity: this.props.quantity,
-    id: this.props.id,
-    done: false
+    id: this.props.id
   }
   onInputChange = (e) => {
     this.setState({
@@ -24,14 +23,13 @@ export default class EditingItem extends Component {
     })
   }
   onSubmit = () => {
-    if (this.state.done) {
-      this.props.onEditSubmit(this.state)
-      this.props.onEditClick()
-    } 
+    this.props.onEditSubmit(this.state)
+    this.props.onEditClick()
   }
   render() {
     return (
-      <div>
+      <div className="listItem--editing">
+        <form onSubmit={this.onSubmit}>
         <div className="wrap--editing-item">
         <input 
             type="text"
@@ -41,11 +39,12 @@ export default class EditingItem extends Component {
             value={this.state.product} 
             autoFocus
         />
+        <button onClick={this.onSubmit} className="btn-nowidth">x</button>
         </div>
         <div className="wrap--editing-item">
           <label 
             className="label" 
-            for="quantity">
+            htmlFor="quantity">
             Quantity: 
           </label>
           <input 
@@ -59,7 +58,7 @@ export default class EditingItem extends Component {
         <div className="wrap--editing-item">
           <label 
             className="label" 
-            for="price">
+            htmlFor="price">
             Price: 
           </label>
           <input 
@@ -70,6 +69,7 @@ export default class EditingItem extends Component {
             value={this.state.price} 
           />
         </div>
+        </form>
       </div>
     )
   }

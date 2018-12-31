@@ -3,10 +3,11 @@
   border: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
 }
 
-body{
+body {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,24 +38,40 @@ body{
   margin-top: 2em;
 }
 
+.btn-nowidth { 
+  position: absolute;
+  font-size: 1.5em;
+  color: rgba(0, 0, 0, 0.4);
+  background-color: inherit;
+  right: 0.5em;
+}
+
+.btn-nowidth:hover {
+  cursor: pointer;
+}
+
 .relative {
   position: relative;
   border-radius: 5px;
 }
 
 @keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .testing {
   border-radius: 50%;
-  font-size:1em;
+  font-size: 1em;
   height: 32px;
   width: 32px;
   position: absolute;
   top: -10px;
-  right:-10px ;
+  right: -10px;
 }
 
 .dashboard {
@@ -63,7 +80,7 @@ body{
   align-items: center;
   justify-content: center;
   width: 100vw;
-  max-width: 500px;
+  max-width: 1200px;
 }
 
 .total-price {
@@ -71,7 +88,7 @@ body{
   margin-bottom: 1em;
   background: rgb(119, 221, 119);
   color: rgb(66, 66, 66);
-  box-shadow: 4px 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .small-button {
@@ -85,13 +102,29 @@ body{
   background-color: rgb(119, 24, 143);
 }
 
-select {
-  width: 100%;
+.select--list {
+  width: 200px;
   padding: 1em;
+  margin-left: auto;
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+  text-align: center;
+}
+
+.select--sortBy {
+  width: 200px;
+  padding: 1em;
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+  text-align: center;
 }
 
 .itemlist {
-  display:flex;
+  display: flex;
   flex-direction: column;
   list-style: none;
   flex-wrap: wrap;
@@ -103,13 +136,30 @@ select {
 }
 
 .listItem {
-  display:flex;
+  display: flex;
   flex-direction: column;
   width: 100%;
   padding: 0.5em 0.25em;
   font-size: 1.25em;
   background-color: white;
-  border-bottom: 1px solid rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  transition: all 0.5s ease-out;
+}
+
+.listItem:hover {
+  cursor: pointer;
+  background-color: rgba(119, 221, 119, 0.5);
+}
+
+.listItem--editing {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5em 0.25em;
+  font-size: 1.25em;
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  transition: all 0.5s ease-out;
 }
 
 .listItem--editable {
@@ -125,10 +175,22 @@ select {
   height: 24px;
   width: 24px;
   margin: 0 5px;
+  z-index: 5;
 }
 
 .icon:hover {
   cursor: pointer;
+}
+
+.wrapper--nav-bar {
+  max-width: 800px;
+  width: 100%;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-around; */
 }
 
 .name {
@@ -150,6 +212,7 @@ select {
 }
 
 .wrap--editing-item {
+  position: relative;
   display: flex;
   width: 100%;
   align-items: center;
@@ -165,7 +228,7 @@ select {
   font-size: 1.5em;
   text-align: center;
   border-radius: 10px;
-  background-color:rgb(202, 202, 202); 
+  background-color: rgb(202, 202, 202);
   width: 100%;
   padding: 0.25em;
 }
@@ -173,20 +236,20 @@ select {
 .label {
   font-size: 0.75em;
   width: 0;
-  color: rgba(0,0,0,0.5);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .notes {
   font-size: 0.75em;
   padding: 0 10px;
-  color: rgba(0,0,0,0.3);
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .heading {
   font-size: 2em;
   text-align: center;
-  font-size: 700;
-  margin-bottom: 1em;
+  font-weight: 700;
+  justify-self: flex-start;
 }
 
 .input--main {
@@ -196,14 +259,9 @@ select {
   padding: 0.5em;
   color: white;
   text-align: center;
-} 
-
-select {
-  width: 200px;
 }
 
 input {
-  width:100%;
+  min-width: 300px;
   background-color: inherit;
-  /* background-color: rgb(201, 198, 198); */
 }
