@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import EditableItem from "./EditableItem";
 import NewListNameInput from './NewListNameInput';
 import addButton from "../image/plus.png";
-// import { getTotal } from "../Helper";
+import garbageIcon from '../image/garbage.png';
+import { handleRemoveList, getKeyValuesFromList } from "../Helper";
 import editIcon from '../image/edit.png';
 import Select from "./Select";
 import uuid from "uuid";
@@ -27,6 +28,7 @@ export default class Dashboard extends Component {
     creatingNewList: false,
     editingListName: false,
     newListName: "",
+    deletingList: false,
     total: 0,
     quantity: 0,
     toggle: false
@@ -92,6 +94,21 @@ export default class Dashboard extends Component {
     // const list = [...this.state.list];
     // localStorage.setItem("list", JSON.stringify(list));
   };
+  onDeleteListClick = e => {
+    this.setState({
+      deletingList: true
+    })
+  }
+  onDeleteListSubmit = e => {
+    // A helper function in Helper.js,
+    // to remove a list , and replace currentlist with another list
+    var lists = handleRemoveList(this.state.lists, this.state.currentList);
+    var keys = getKeyValuesFromList(this.state.lists, this.state.currentList);
+    this.setState({
+      lists,
+      currentList: keys[0]
+    })
+  }
   onEditSubmit = ({ product, price, quantity, id, note }) => {
     var updatedList = this.state.lists;
     var currentList = updatedList[this.state.currentList];
@@ -318,6 +335,13 @@ export default class Dashboard extends Component {
                 onClick={this.onEditListNameClick}
                 value={this.state.currentList}
                 src={editIcon}>
+              </img>
+              <img
+                className="icon"
+                alt="Garbage icon"
+                onClick={this.onDeleteListSubmit}
+                src={garbageIcon}
+              >
               </img>
             </div>
           }

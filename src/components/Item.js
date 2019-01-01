@@ -5,7 +5,7 @@ import trashIcon from "../image/trash.png";
 
 export default class Item extends Component {
     render() {
-        const { checked, product,  quantity, note, onEditClick, onToggleChecked, handleDeleteClick } = this.props;
+        const { checked, product, quantity, note, onEditClick, onToggleChecked, handleDeleteClick } = this.props;
         var listItemStyle = ''
         if (checked) {
             listItemStyle = 'listItem listItem--unchecked'
@@ -40,8 +40,12 @@ export default class Item extends Component {
                         />
                     </div>
                 </div>
-                <p className="notes">Quantity: {quantity}</p>
-                <p className="notes">Note: {note}</p>
+                {!checked &&
+                    <div>
+                        <p className="notes">Quantity: {quantity}</p>
+                        {note.trim().length > 0 && <p className="notes">Note: {note}</p>}
+                    </div>
+                }
             </div>
         )
     }
