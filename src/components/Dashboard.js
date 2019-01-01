@@ -10,34 +10,6 @@ import uuid from "uuid";
 export default class Dashboard extends Component {
   state = {
     lists: {
-      // "Trip to TJ": [
-      //   {
-      //     product: "Pizza",
-      //     price: 5,
-      //     quantity: 1,
-      //     note: "",
-      //     editing: false,
-      //     id: uuid()
-      //   },
-      //   {
-      //     product: "Soy Milk",
-      //     price: 3,
-      //     quantity: 2,
-      //     note: "",
-      //     editing: false,
-      //     id: uuid()
-      //   }
-      // ],
-      // "Trip to Costco": [
-      //   {
-      //     product: "Starbucks Coffee",
-      //     price: 25,
-      //     quantity: 1,
-      //     note: "",
-      //     editing: false,
-      //     id: uuid()
-      //   }
-      // ]
       "New list 1": [
         {
           product: "New product",
@@ -223,7 +195,7 @@ export default class Dashboard extends Component {
     const currentList = JSON.parse(cachedCurrentList);
     console.log(cachedList)
     console.log(cachedCurrentList)
-    if (cachedList) {
+    if (cachedList && cachedCurrentList) {
       this.setState({
         lists,
         currentList
@@ -329,23 +301,27 @@ export default class Dashboard extends Component {
               onEditListNameClick={this.onEditListNameClick}
             />
             :
-            <select
-              className="select--list"
-              value={this.state.currentList}
-              onChange={this.onChangeSelect}
-            >
-              {Object.keys(this.state.lists).map(key => (
-                <Select value={key} key={uuid()} />
-              ))}
-              <option value="Add">-----Add another list-----</option>
-            </select>
+            <div className="wrapper-select--list">
+              <select
+                className="select--list"
+                value={this.state.currentList}
+                onChange={this.onChangeSelect}
+              >
+                {Object.keys(this.state.lists).map(key => (
+                  <Select value={key} key={uuid()} />
+                ))}
+                <option value="Add">-----Add another list-----</option>
+              </select>
+              <img
+                className="icon"
+                alt="Edit icon"
+                onClick={this.onEditListNameClick}
+                value={this.state.currentList}
+                src={editIcon}>
+              </img>
+            </div>
           }
-          <img
-            alt="Edit icon"
-            onClick={this.onEditListNameClick}
-            value={this.state.currentList}
-            src={editIcon}>
-          </img>
+
         </div>
         {!this.state.toggle && (
           <div className="itemlist">

@@ -16,7 +16,7 @@ export default class NewListNameInput extends Component {
   render() {
     return (
         <input 
-        className="select--list"
+        className="select--list border-green"
         value={this.state.currentList} 
         onChange={this.onCurrentListChange}
         onBlur={this.handleCurrentListChange} 
