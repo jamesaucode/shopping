@@ -5,6 +5,8 @@ import addButton from "../image/plus.png";
 import garbageIcon from '../image/garbage.png';
 import { handleRemoveList, getKeyValuesFromList } from "../Helper";
 import editIcon from '../image/edit.png';
+import tickIcon from '../image/tick.png';
+import sortIcon from '../image/sort.png';
 import Select from "./Select";
 import uuid from "uuid";
 
@@ -24,7 +26,8 @@ export default class Dashboard extends Component {
     },
     currentList: "New list 1",
     search: "",
-    sortBy: "",
+    sortBy: "Date",
+    sortByOpen: false,
     creatingNewList: false,
     editingListName: false,
     newListName: "",
@@ -102,12 +105,14 @@ export default class Dashboard extends Component {
   onDeleteListSubmit = e => {
     // A helper function in Helper.js,
     // to remove a list , and replace currentlist with another list
-    var lists = handleRemoveList(this.state.lists, this.state.currentList);
     var keys = getKeyValuesFromList(this.state.lists, this.state.currentList);
-    this.setState({
-      lists,
-      currentList: keys[0]
-    })
+    if (keys.length > 1) {
+      var lists = handleRemoveList(this.state.lists, this.state.currentList);
+      this.setState({
+        lists,
+        currentList: keys[0]
+      })
+    }
   }
   onEditSubmit = ({ product, price, quantity, id, note }) => {
     var updatedList = this.state.lists;
@@ -164,15 +169,17 @@ export default class Dashboard extends Component {
     e.preventDefault();
     if (this.state.newListName.trim().length > 0) {
       var lists = this.state.lists;
-      lists[this.state.newListName] = [];
+      var newListName = this.state.newListName;
+      lists[newListName] = [];
       this.setState({
         lists,
-        newListName: "",
+        newListName: '',
         creatingNewList: false
       });
     }
     this.setState({
-      creatingNewList: false
+      creatingNewList: false,
+      currentList: newListName
     })
   };
   onCurrentListSubmit = newName => {
@@ -204,6 +211,23 @@ export default class Dashboard extends Component {
       sortBy: e.target.value
     });
   };
+  onSortByDateClick = e => {
+    this.setState({
+      sortBy: 'Date',
+      sortByOpen: false
+    })
+  }
+  onSortByAlphabetClick = e => {
+    this.setState({
+      sortBy: 'Alphabetical',
+      sortByOpen: false
+    })
+  }
+  onSortByClick = e => {
+    this.setState(prevState => ({
+      sortByOpen: !prevState.sortByOpen
+    }))
+  }
 
   componentDidMount = () => {
     const cachedList = localStorage.getItem("list");
@@ -218,19 +242,18 @@ export default class Dashboard extends Component {
         currentList
       })
     }
-    // getTotal(this.state.lists[this.state.currentList]);
   };
   componentDidUpdate = (prevProps, prevState) => {
-    // var newTotal = getTotal(this.state.lists[this.state.currentList]);
-    // if (this.state.total !== newTotal) {
-    //   this.setState({
-    //     total: newTotal
-    //   });
-    // }
     localStorage.setItem("list", JSON.stringify(this.state.lists))
     localStorage.setItem("currentList", JSON.stringify(this.state.currentList))
   };
   render() {
+    var showOrNot = '';
+    if (this.state.sortByOpen) {
+      showOrNot = 'dropdown-content--show'
+    } else {
+      showOrNot = 'dropdown-content'
+    }
     const searchTerm = this.state.search;
     const showList = this.state.lists[this.state.currentList].filter(item => {
       if (item.product.toLowerCase().includes(searchTerm.toLowerCase())) {
@@ -264,18 +287,31 @@ export default class Dashboard extends Component {
         <div className="wrapper--nav-bar">
           <nav className="nav-bar">
             <h1 className="heading">Easy Shopping List</h1>
-            <label className="label-with-width margin-left-auto" htmlFor="sort">
+            {/* <label className="label-with-width margin-left-auto" htmlFor="sort">
               Sort By:
-            </label>
-            <select
-              name="sort"
-              className="select--sortBy"
-              value={this.state.sortBy}
-              onChange={this.onSortByChange}
-            >
-              <option defaultValue>Date Added</option>
-              <option>Alphabetical</option>
-            </select>
+            </label> */}
+            <div className="dropdown">
+              <button className="btn--basic" onClick={this.onSortByClick}>
+                <img className="logo--small" src={sortIcon}></img>
+              </button>
+              <div className={showOrNot}>
+                <div onClick={this.onSortByDateClick} className="wrapper--btn--dropdown">
+
+                  {this.state.sortBy === "Date" ? <img src={tickIcon} className="btn-img"></img> :
+                    <div className="btn-img"></div>
+                  }
+
+                  <span className="btn-text">Date</span>
+                </div>
+                <div onClick={this.onSortByAlphabetClick} className="wrapper--btn--dropdown">
+
+                  {this.state.sortBy === "Alphabetical" ? <img src={tickIcon} className="btn-img"></img>
+                    : <div className="btn-img"></div>}
+
+                  <span className="btn-text">Alphabetical</span>
+                </div>
+              </div>
+            </div>
           </nav>
         </div>
         {this.state.creatingNewList && (
@@ -371,6 +407,7 @@ export default class Dashboard extends Component {
             ))}
           </div>
         )}
+      {this.state.sortByOpen && <div className="whole-screen" onClick={this.onSortByClick}></div>}
       </div>
     );
   }
