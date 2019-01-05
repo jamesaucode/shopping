@@ -143,16 +143,22 @@
 
 .select--list {
     max-width: 300px;
+    min-width: 200px;
     width: 100%;
     padding: 0.5em 1em;
     font-size: 1.5em;
     font-weight: 500;
     margin: 1em auto;
+    background-color: white;
     /* for Firefox */
     -moz-appearance: none;
     /* for Chrome */
     -webkit-appearance: none;
     text-align: center;
+
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .select--sortBy {
@@ -268,9 +274,10 @@
 }
 
 .wrapper--nav-bar {
-    height: 80px;
-    max-width: 800px;
-    width: 100%;
+    height: 60px;
+    width: 100vw;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-bar {
@@ -278,6 +285,7 @@
     // padding: 20px 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     /* justify-content: space-around; */
 }
 
@@ -359,6 +367,7 @@
     font-size: calc(0.6vw + 1.1em);
     text-align: center;
     font-weight: 500;
+    margin: 0 1em;
     justify-self: flex-start;
 }
 

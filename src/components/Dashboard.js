@@ -29,6 +29,7 @@ export default class Dashboard extends Component {
     sortBy: "Date",
     sortByOpen: false,
     creatingNewList: false,
+    choosingList: false,
     editingListName: false,
     newListName: "",
     deletingList: false,
@@ -50,19 +51,18 @@ export default class Dashboard extends Component {
     this.setState({
       input: e.target.value
     });
-  onChangeSelect = e => {
-    var target = e.target.value;
-    if (target === "Add") {
-      console.log("Adding another list");
-      this.setState({
-        creatingNewList: true
-      });
-    } else {
-      this.setState({
-        currentList: target
-      });
-    }
+  onCreatingNewListClick = e => {
+    console.log('adding another list');
+    this.setState(prevState=> ({
+      creatingNewList: !prevState.creatingNewList,
+      choosingList: false
+    }))
   };
+  onChoosingListClick = e => {
+    this.setState(prevState => ({
+      choosingList: !prevState.choosingList
+    }))
+  }
   onPriceInputChange = e => {
     var input = e.target.value;
     if (input.match(/^\d*(\.\d{0,1})?\d$/)) {
@@ -182,6 +182,12 @@ export default class Dashboard extends Component {
       currentList: newListName
     })
   };
+  onChangeListClick = (key) => {
+    this.setState({
+      currentList: key,
+      choosingList: false
+    })
+  }
   onCurrentListSubmit = newName => {
     var lists = this.state.lists;
     var oldName = this.state.currentList;
@@ -254,6 +260,12 @@ export default class Dashboard extends Component {
     } else {
       showOrNot = 'dropdown-content'
     }
+    var showOrNotLists = '';
+    if (this.state.choosingList) {
+      showOrNotLists = 'dropdown-content--lists--show'
+    } else {
+      showOrNotLists = 'dropdown-content--lists'
+    }
     const searchTerm = this.state.search;
     const showList = this.state.lists[this.state.currentList].filter(item => {
       if (item.product.toLowerCase().includes(searchTerm.toLowerCase())) {
@@ -287,9 +299,6 @@ export default class Dashboard extends Component {
         <div className="wrapper--nav-bar">
           <nav className="nav-bar">
             <h1 className="heading">Easy Shopping List</h1>
-            {/* <label className="label-with-width margin-left-auto" htmlFor="sort">
-              Sort By:
-            </label> */}
             <div className="dropdown">
               <button className="btn--basic" onClick={this.onSortByClick}>
                 <img className="logo--small" src={sortIcon}></img>
@@ -355,16 +364,27 @@ export default class Dashboard extends Component {
             />
             :
             <div className="wrapper-select--list">
-              <select
-                className="select--list"
-                value={this.state.currentList}
-                onChange={this.onChangeSelect}
-              >
-                {Object.keys(this.state.lists).map(key => (
-                  <Select value={key} key={uuid()} />
-                ))}
-                <option value="Add">-----Add another list-----</option>
-              </select>
+              <div className="dropdown">
+                {/* <button className="btn--basic" onClick={this.onChoosingListClick}> */}
+                  <h1 onClick={this.onChoosingListClick} className="select--list">{this.state.currentList}</h1>
+                {/* </button> */}
+                <div className={showOrNotLists}>
+                  {Object.keys(this.state.lists).map(key => {
+                    return (
+                      <div onClick={() => this.onChangeListClick(key)} className="wrapper--btn--dropdown">
+                        {this.state.currentList === key ? <img src={tickIcon} className="btn-img"></img> :
+                          <div className="btn-img"></div>
+                        }
+                        <span className="btn-text">{key}</span>
+                      </div>
+                    )
+                  })}
+                  <div className="wrapper--btn--dropdown">
+                    <div className="btn-img"></div>
+                    <span onClick={this.onCreatingNewListClick} className="btn-text">Add</span>
+                  </div>
+                </div>
+              </div>
               <img
                 className="icon"
                 alt="Edit icon"
@@ -407,7 +427,7 @@ export default class Dashboard extends Component {
             ))}
           </div>
         )}
-      {this.state.sortByOpen && <div className="whole-screen" onClick={this.onSortByClick}></div>}
+        {this.state.sortByOpen && <div className="whole-screen" onClick={this.onSortByClick}></div>}
       </div>
     );
   }
